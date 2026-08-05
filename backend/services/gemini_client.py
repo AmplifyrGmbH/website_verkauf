@@ -2,7 +2,8 @@ import base64
 import json
 import re
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 from config import settings
 
@@ -15,11 +16,7 @@ def analyse_screenshots(
     suchbegriff: str,
     tech_info: str,
 ) -> dict:
-    genai.configure(api_key=settings.GEMINI_API_KEY)
-    model = genai.GenerativeModel(MODEL)
-
-    desktop_b64 = base64.b64encode(desktop_bytes).decode()
-    mobile_b64 = base64.b64encode(mobile_bytes).decode()
+    client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
     prompt = f"""Du bist Experte für Unternehmens-Websites.
 Du siehst den Desktop- und Mobile-Screenshot einer Unternehmens-Website.
@@ -54,16 +51,16 @@ Antworte NUR mit JSON:
   "hat_chat": bool
 }}"""
 
-    response = model.generate_content(
-        [
-            {"inline_data": {"mime_type": "image/png", "data": desktop_b64}},
-            {"inline_data": {"mime_type": "image/png", "data": mobile_b64}},
+    response = client.models.generate_content(
+        model=MODEL,
+        contents=[
+            types.Part.from_bytes(data=desktop_bytes, mime_type="image/png"),
+            types.Part.from_bytes(data=mobile_bytes, mime_type="image/png"),
             prompt,
-        ]
+        ],
     )
 
     text = response.text.strip()
-    # Extract JSON from potential markdown code block
     match = re.search(r"```(?:json)?\s*([\s\S]+?)\s*```", text)
     if match:
         text = match.group(1)
