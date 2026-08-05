@@ -5,7 +5,7 @@ import { startDiscovery, startAnalyse, getJobs, type Job } from '@/lib/api'
 
 export default function PipelinePage() {
   const [suchbegriff, setSuchbegriff] = useState('')
-  const [limit, setLimit] = useState(100)
+  const [limit, setLimit] = useState<number | ''>('')
   const [jobs, setJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState('')
@@ -31,7 +31,7 @@ export default function PipelinePage() {
     setLoading(true)
     setMsg('')
     try {
-      const r1 = await startDiscovery(suchbegriff.trim(), limit)
+      const r1 = await startDiscovery(suchbegriff.trim(), limit === '' ? 100 : limit)
       setMsg(`Discovery gestartet (Job #${r1.job_id}) — Analyse startet danach automatisch`)
       setSuchbegriff('')
       loadJobs()
@@ -89,9 +89,10 @@ export default function PipelinePage() {
               type="number"
               className="w-32 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={limit}
+              placeholder="100"
               min={1}
               max={500}
-              onChange={(e) => setLimit(Number(e.target.value))}
+              onChange={(e) => setLimit(e.target.value === '' ? '' : Number(e.target.value))}
             />
           </div>
           <button
