@@ -12,4 +12,4 @@ def run_google_maps(suchbegriff: str, limit: int) -> list[dict]:
             "countryCode": "ch",
         }
     )
-    return list(client.dataset(run["defaultDatasetId"]).iterate_items())
+    return list(client.dataset(run.default_dataset_id).iterate_items())
