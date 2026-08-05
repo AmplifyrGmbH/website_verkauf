@@ -53,6 +53,7 @@ export interface ConnectLead {
   screenshot_desktop?: string
   kampagne?: string
   suchbegriff?: string
+  branche?: string
   ki_begruendung?: string
   ki_prioritaet_hoch?: boolean
   connect_status?: string
@@ -60,6 +61,8 @@ export interface ConnectLead {
   connect_versuche?: number
   connect_letzter_versuch_am?: string
   demo_verschickt_am?: string
+  entdeckt_am?: string
+  analysiert_am?: string
   letzte_notiz?: {
     text: string
     autor: string

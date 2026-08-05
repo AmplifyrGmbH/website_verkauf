@@ -150,6 +150,16 @@ async def bulk_zuteilen(req: BulkZuteilenRequest = BulkZuteilenRequest(), db: As
     return {"zugeteilt": len(leads)}
 
 
+@router.patch("/{place_id}/zuweisen")
+async def zuweisen(place_id: str, body: dict, db: AsyncSession = Depends(get_db)):
+    lead = await db.get(Lead, place_id)
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead nicht gefunden")
+    lead.connect_zugewiesen = body.get("person") or None
+    await db.commit()
+    return {"ok": True}
+
+
 @router.patch("/{place_id}/status")
 async def set_status(place_id: str, req: StatusRequest, db: AsyncSession = Depends(get_db)):
     lead = await db.get(Lead, place_id)
@@ -226,6 +236,7 @@ def _connect_lead_dict(l: Lead) -> dict:
         "screenshot_desktop": l.screenshot_desktop,
         "kampagne": l.kampagne,
         "suchbegriff": l.suchbegriff,
+        "branche": l.branche,
         "ki_begruendung": l.ki_begruendung,
         "ki_prioritaet_hoch": l.ki_prioritaet_hoch,
         "connect_status": l.connect_status,
@@ -235,4 +246,6 @@ def _connect_lead_dict(l: Lead) -> dict:
             l.connect_letzter_versuch_am.isoformat() if l.connect_letzter_versuch_am else None
         ),
         "demo_verschickt_am": l.demo_verschickt_am.isoformat() if l.demo_verschickt_am else None,
+        "entdeckt_am": l.entdeckt_am.isoformat() if l.entdeckt_am else None,
+        "analysiert_am": l.analysiert_am.isoformat() if l.analysiert_am else None,
     }
