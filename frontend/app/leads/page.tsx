@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import Link from 'next/link'
 import { getLeads, type Lead } from '@/lib/api'
 
 const STATUS_OPTIONS = ['', 'entdeckt', 'analysiert', 'fehler']
@@ -100,7 +101,11 @@ export default function LeadsPage() {
             <tbody className="bg-white divide-y divide-gray-100">
               {leads.map((l) => (
                 <tr key={l.place_id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{l.name_anzeige || l.name}</td>
+                  <td className="px-4 py-3 font-medium">
+                    <Link href={`/leads/${encodeURIComponent(l.place_id)}`} className="hover:text-blue-600 hover:underline">
+                      {l.name_anzeige || l.name}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-gray-500">{l.ort || '—'}</td>
                   <td className="px-4 py-3 text-gray-500">{l.telefon || '—'}</td>
                   <td className="px-4 py-3">
