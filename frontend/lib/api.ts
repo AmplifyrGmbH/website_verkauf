@@ -80,6 +80,7 @@ export interface Job {
 }
 
 export interface Stats {
+  [key: string]: number
   david: number
   sinan: number
   timo: number
