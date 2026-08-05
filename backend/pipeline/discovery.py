@@ -56,6 +56,8 @@ async def run_discovery(job_id: int, suchbegriff: str, limit: int):
                         "koordinaten": koordinaten,
                         "suchbegriff": suchbegriff,
                         "status": "entdeckt",
+                        "outreach_status": "in_kampagne",
+                        "connect_status": "nicht_angerufen",
                     }
 
                     stmt = insert(Lead).values(**data).on_conflict_do_nothing(index_elements=["place_id"])

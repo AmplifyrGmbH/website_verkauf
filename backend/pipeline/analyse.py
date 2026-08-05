@@ -226,10 +226,10 @@ async def _analyse_lead(place_id: str):
         lead.ki_begruendung = ki_data.get("ki_begruendung")
         lead.ki_prioritaet_hoch = ki_data.get("ki_prioritaet_hoch", False)
 
-        # Set outreach status if AI recommends contacting
-        if lead.ki_empfehlung and not lead.parking_seite:
-            lead.outreach_status = "in_kampagne"
-            lead.connect_status = "nicht_angerufen"
+        # Remove parking sites from Connect, keep all others
+        if lead.parking_seite:
+            lead.outreach_status = None
+            lead.connect_status = None
 
         lead.status = "analysiert"
         lead.analysiert_am = datetime.now(timezone.utc)
