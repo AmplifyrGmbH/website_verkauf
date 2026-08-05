@@ -6,7 +6,6 @@ import { startDiscovery, startAnalyse, getJobs, type Job } from '@/lib/api'
 export default function PipelinePage() {
   const [suchbegriff, setSuchbegriff] = useState('')
   const [limit, setLimit] = useState(100)
-  const [analyseLimit, setAnalyseLimit] = useState<number | ''>('')
   const [jobs, setJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState('')
@@ -26,31 +25,31 @@ export default function PipelinePage() {
     return () => clearInterval(interval)
   }, [loadJobs])
 
-  async function handleDiscovery(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!suchbegriff.trim()) return
     setLoading(true)
     setMsg('')
     try {
-      const r = await startDiscovery(suchbegriff.trim(), limit)
-      setMsg(`Discovery gestartet (Job #${r.job_id})`)
+      const r1 = await startDiscovery(suchbegriff.trim(), limit)
+      setMsg(`Discovery gestartet (Job #${r1.job_id}) — Analyse startet danach automatisch`)
       setSuchbegriff('')
       loadJobs()
-    } catch (e: unknown) {
-      setMsg(`Fehler: ${e instanceof Error ? e.message : 'Unbekannt'}`)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleAnalyse(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setMsg('')
-    try {
-      const r = await startAnalyse(analyseLimit !== '' ? Number(analyseLimit) : undefined)
-      setMsg(`Analyse gestartet (Job #${r.job_id})`)
-      loadJobs()
+      // Poll until discovery job is done, then start analyse
+      const pollAndAnalyse = async () => {
+        for (let i = 0; i < 120; i++) {
+          await new Promise((res) => setTimeout(res, 5000))
+          const jobs = await getJobs()
+          const dJob = jobs.find((j) => j.id === r1.job_id)
+          if (dJob?.status === 'abgeschlossen' || dJob?.status === 'fehler') {
+            const r2 = await startAnalyse()
+            setMsg(`Discovery abgeschlossen — Analyse gestartet (Job #${r2.job_id})`)
+            loadJobs()
+            return
+          }
+        }
+      }
+      pollAndAnalyse()
     } catch (e: unknown) {
       setMsg(`Fehler: ${e instanceof Error ? e.message : 'Unbekannt'}`)
     } finally {
@@ -69,8 +68,11 @@ export default function PipelinePage() {
       )}
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-        <h2 className="font-semibold text-lg">Phase 1 — Discovery</h2>
-        <form onSubmit={handleDiscovery} className="space-y-3">
+        <h2 className="font-semibold text-lg">Discovery + Analyse starten</h2>
+        <p className="text-sm text-gray-500">
+          Discovery läuft zuerst, Analyse startet automatisch danach.
+        </p>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Suchbegriff</label>
             <input
@@ -95,35 +97,9 @@ export default function PipelinePage() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
           >
-            Discovery starten
-          </button>
-        </form>
-      </div>
-
-      <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-        <h2 className="font-semibold text-lg">Phase 2 — Website-Analyse</h2>
-        <form onSubmit={handleAnalyse} className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Limit (leer = alle)
-            </label>
-            <input
-              type="number"
-              className="w-32 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="50"
-              value={analyseLimit}
-              min={1}
-              onChange={(e) => setAnalyseLimit(e.target.value === '' ? '' : Number(e.target.value))}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 disabled:opacity-50"
-          >
-            Analyse starten
+            {loading ? 'Startet...' : 'Starten'}
           </button>
         </form>
       </div>
