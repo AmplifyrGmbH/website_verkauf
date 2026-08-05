@@ -3,8 +3,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import {
   getConnectLeads,
-  getTagesStats,
-  getTotalStats,
   setStatus,
   setDemoVerschickt,
   addNotiz,
@@ -14,7 +12,6 @@ import {
 } from '@/lib/api'
 
 const PERSONEN = ['david', 'sinan', 'timo']
-const GOAL = 5
 
 const STATUS_OPTIONS = [
   { value: 'nicht_angerufen', label: 'Nicht angerufen' },
@@ -41,8 +38,6 @@ const STATUS_COLOR: Record<string, string> = {
 export default function ConnectPage() {
   const [leads, setLeads] = useState<ConnectLead[]>([])
   const [loading, setLoading] = useState(true)
-  const [tages, setTages] = useState<Record<string, number>>({})
-  const [totalStats, setTotalStats] = useState<Record<string, number>>({})
   const [filterKampagne, setFilterKampagne] = useState('')
   const [filterPerson, setFilterPerson] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
@@ -56,19 +51,13 @@ export default function ConnectPage() {
 
   const load = useCallback(async () => {
     try {
-      const [ls, t, tot] = await Promise.all([
-        getConnectLeads({
-          kampagne: filterKampagne || undefined,
-          person: filterPerson || undefined,
-          status: filterStatus || undefined,
-          search: filterSearch || undefined,
-        }),
-        getTagesStats(),
-        getTotalStats(),
-      ])
+      const ls = await getConnectLeads({
+        kampagne: filterKampagne || undefined,
+        person: filterPerson || undefined,
+        status: filterStatus || undefined,
+        search: filterSearch || undefined,
+      })
       setLeads(ls)
-      setTages(t)
-      setTotalStats(tot)
     } catch (e) {
       console.error(e)
     } finally {
@@ -144,25 +133,7 @@ export default function ConnectPage() {
 
   return (
     <div className="max-w-full space-y-4">
-      {/* Stats bar */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Connect</h1>
-        <div className="flex gap-4">
-          {PERSONEN.map((p) => {
-            const h = tages[p] ?? 0
-            const reached = h >= GOAL
-            return (
-              <div key={p} className="text-center">
-                <div className="text-xs text-gray-500 capitalize">{p}</div>
-                <div className={`text-lg font-bold ${reached ? 'text-green-600' : 'text-gray-800'}`}>
-                  {h}<span className="text-xs text-gray-400">/{GOAL}</span>
-                </div>
-                <div className="text-xs text-gray-400">{totalStats[p] ?? 0} ges.</div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold">Connect</h1>
 
       {/* Active person selector */}
       <div className="flex items-center gap-2">
