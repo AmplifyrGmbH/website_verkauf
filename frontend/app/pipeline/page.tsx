@@ -4,7 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { startDiscovery, startAnalyse, getJobs, type Job } from '@/lib/api'
 
 export default function PipelinePage() {
-  const [suchbegriff, setSuchbegriff] = useState('')
+  const [begriff, setBegriff] = useState('')
+  const [orte, setOrte] = useState('')
   const [limit, setLimit] = useState<number | ''>('')
   const [jobs, setJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(false)
@@ -27,13 +28,18 @@ export default function PipelinePage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!suchbegriff.trim()) return
+    if (!begriff.trim()) return
+    const ortListe = orte.split(',').map(o => o.trim()).filter(Boolean)
+    const suchbegriffe = ortListe.length > 0
+      ? ortListe.map(o => `${begriff.trim()} ${o}`).join(', ')
+      : begriff.trim()
     setLoading(true)
     setMsg('')
     try {
-      const r1 = await startDiscovery(suchbegriff.trim(), limit === '' ? 100 : limit)
+      const r1 = await startDiscovery(suchbegriffe, limit === '' ? 100 : limit)
       setMsg(`Suche gestartet (Job #${r1.job_id})…`)
-      setSuchbegriff('')
+      setBegriff('')
+      setOrte('')
       loadJobs()
       // Poll until discovery job is done, then start analyse
       const pollAndAnalyse = async () => {
@@ -70,28 +76,41 @@ export default function PipelinePage() {
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
         <h2 className="font-semibold text-lg">Leads suchen</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Suchbegriffe
-            </label>
-            <textarea
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              rows={3}
-              placeholder="z.B. Zahnarzt Zürich, Restaurant Bern, Fitnessstudio Basel"
-              value={suchbegriff}
-              onChange={(e) => setSuchbegriff(e.target.value)}
-              required
-            />
-            {suchbegriff.trim() && (
-              <div className="mt-1 flex flex-wrap gap-1">
-                {suchbegriff.split(',').map(s => s.trim()).filter(Boolean).map((s, i) => (
-                  <span key={i} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">
-                    {s}
-                  </span>
-                ))}
-              </div>
-            )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Begriff</label>
+              <input
+                type="text"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="z.B. Zahnarzt"
+                value={begriff}
+                onChange={(e) => setBegriff(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Orte (kommagetrennt)</label>
+              <input
+                type="text"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="z.B. Zürich, Bern, Basel"
+                value={orte}
+                onChange={(e) => setOrte(e.target.value)}
+              />
+            </div>
           </div>
+          {begriff.trim() && (
+            <div className="flex flex-wrap gap-1">
+              {(orte.split(',').map(o => o.trim()).filter(Boolean).length > 0
+                ? orte.split(',').map(o => o.trim()).filter(Boolean).map(o => `${begriff.trim()} ${o}`)
+                : [begriff.trim()]
+              ).map((s, i) => (
+                <span key={i} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">
+                  {s}
+                </span>
+              ))}
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Anzahl pro Begriff</label>
             <input
