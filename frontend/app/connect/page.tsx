@@ -18,11 +18,10 @@ const STATUS_OPTIONS = [
   { value: 'callback', label: 'Callback' },
   { value: 'demo_gewuenscht', label: 'Demo gewünscht' },
   { value: 'kein_interesse', label: 'Kein Interesse' },
-  { value: 'verkauft', label: 'Verkauft' },
   { value: 'website_zu_gut', label: 'Website zu gut' },
 ]
 
-const TERMINAL = new Set(['kein_interesse', 'verkauft', 'website_zu_gut'])
+const TERMINAL = new Set(['kein_interesse', 'website_zu_gut'])
 
 type Tab = 'alle' | 'nicht_angerufen' | string // string = person name
 

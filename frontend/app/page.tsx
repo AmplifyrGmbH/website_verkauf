@@ -9,7 +9,6 @@ const STATUS_LABELS: Record<string, string> = {
   callback: 'Callback',
   demo_gewuenscht: 'Demo gewünscht',
   kein_interesse: 'Kein Interesse',
-  verkauft: 'Verkauft',
   website_zu_gut: 'Website zu gut',
 }
 
@@ -19,7 +18,6 @@ const STATUS_COLORS: Record<string, string> = {
   callback: 'text-orange-600',
   demo_gewuenscht: 'text-blue-600',
   kein_interesse: 'text-red-500',
-  verkauft: 'text-green-600',
   website_zu_gut: 'text-purple-600',
 }
 
@@ -122,7 +120,6 @@ export default function Dashboard() {
                   callback: 'bg-orange-400',
                   demo_gewuenscht: 'bg-blue-400',
                   kein_interesse: 'bg-red-400',
-                  verkauft: 'bg-green-500',
                   website_zu_gut: 'bg-purple-400',
                 }
                 return (

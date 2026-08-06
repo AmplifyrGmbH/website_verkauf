@@ -21,6 +21,7 @@ class LeadPatch(BaseModel):
 @router.get("/")
 async def list_leads(
     status: Optional[str] = None,
+    connect_status: Optional[str] = None,
     ki_empfehlung: Optional[bool] = None,
     branche: Optional[str] = None,
     suchbegriff: Optional[str] = None,
@@ -33,6 +34,8 @@ async def list_leads(
 
     if status:
         q = q.where(Lead.status == status)
+    if connect_status:
+        q = q.where(Lead.connect_status == connect_status)
     if ki_empfehlung is not None:
         q = q.where(Lead.ki_empfehlung == ki_empfehlung)
     if branche:

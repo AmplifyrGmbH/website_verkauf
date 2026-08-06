@@ -127,6 +127,7 @@ export async function getJob(id: number): Promise<Job> {
 
 export async function getLeads(params?: {
   status?: string
+  connect_status?: string
   ki_empfehlung?: boolean
   search?: string
   limit?: number
@@ -134,6 +135,7 @@ export async function getLeads(params?: {
 }): Promise<{ total: number; leads: Lead[] }> {
   const q = new URLSearchParams()
   if (params?.status) q.set('status', params.status)
+  if (params?.connect_status) q.set('connect_status', params.connect_status)
   if (params?.ki_empfehlung !== undefined) q.set('ki_empfehlung', String(params.ki_empfehlung))
   if (params?.search) q.set('search', params.search)
   if (params?.limit !== undefined) q.set('limit', String(params.limit))
