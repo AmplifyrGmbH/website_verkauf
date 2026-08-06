@@ -85,7 +85,6 @@ export default function LeadsPage() {
                 <th className="px-4 py-3 text-left">Status</th>
                 <th className="px-4 py-3 text-left">KI</th>
                 <th className="px-4 py-3 text-left">Suchbegriff</th>
-                <th className="px-4 py-3 text-left">Entdeckt</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
@@ -124,9 +123,6 @@ export default function LeadsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{l.suchbegriff || '—'}</td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">
-                    {l.entdeckt_am ? new Date(l.entdeckt_am).toLocaleDateString('de-CH') : '—'}
-                  </td>
                 </tr>
               ))}
             </tbody>
