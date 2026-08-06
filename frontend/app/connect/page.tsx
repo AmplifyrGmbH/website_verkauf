@@ -272,17 +272,6 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
               ))}
             </select>
 
-            {/* Demo */}
-            {!lead.demo_verschickt_am ? (
-              <button
-                onClick={handleDemoVerschickt}
-                className="text-sm text-purple-600 hover:text-purple-800 font-medium whitespace-nowrap"
-              >
-                Demo erstellen
-              </button>
-            ) : (
-              <span className="text-sm text-green-600 font-medium whitespace-nowrap">Demo verschickt</span>
-            )}
           </div>
         </div>
       </div>
