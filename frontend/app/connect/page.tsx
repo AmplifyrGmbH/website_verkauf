@@ -75,7 +75,7 @@ export default function ConnectPage() {
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); sessionStorage.setItem('cc_status', e.target.value) }}
         >
-          <option value="">Alle Stati</option>
+          <option value="">Alle</option>
           {STATUS_OPTIONS.map(s => (
             <option key={s.value} value={s.value}>{s.label}</option>
           ))}
