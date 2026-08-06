@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
+import Link from 'next/link'
 import {
   getConnectLeads,
   setStatus,
@@ -30,6 +31,7 @@ export default function ConnectPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [personFilter, setPersonFilter] = useState('')
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     try {
@@ -98,7 +100,13 @@ export default function ConnectPage() {
       ) : (
         <div className="space-y-2">
           {filtered.map((lead) => (
-            <LeadCard key={lead.place_id} lead={lead} onReload={load} />
+            <LeadCard
+              key={lead.place_id}
+              lead={lead}
+              onReload={load}
+              expanded={expandedId === lead.place_id}
+              onToggle={() => setExpandedId(expandedId === lead.place_id ? null : lead.place_id)}
+            />
           ))}
         </div>
       )}
@@ -106,8 +114,12 @@ export default function ConnectPage() {
   )
 }
 
-function LeadCard({ lead, onReload }: { lead: ConnectLead; onReload: () => void }) {
-  const [expanded, setExpanded] = useState(false)
+function LeadCard({ lead, onReload, expanded, onToggle }: {
+  lead: ConnectLead
+  onReload: () => void
+  expanded: boolean
+  onToggle: () => void
+}) {
   const [notizen, setNotizen] = useState<Array<{ id: number; autor: string; text: string; erstellt_am: string }>>([])
   const [notizText, setNotizText] = useState('')
   const [notizLoading, setNotizLoading] = useState(false)
@@ -189,21 +201,19 @@ function LeadCard({ lead, onReload }: { lead: ConnectLead; onReload: () => void 
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-      {/* Card header */}
-      <div className="px-4 py-3">
+      {/* Card header — click anywhere except name/controls to toggle feed */}
+      <div className="px-4 py-3 cursor-pointer select-none" onClick={onToggle}>
         <div className="flex items-start gap-2">
-          {/* Expand toggle */}
-          <button
-            onClick={() => setExpanded(v => !v)}
-            className="mt-0.5 text-gray-400 hover:text-gray-600 shrink-0 w-4"
-          >
-            <span className={`inline-block transition-transform text-xs ${expanded ? '' : '-rotate-90'}`}>▼</span>
-          </button>
-
           {/* Name + subtitle */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
-              <span className="font-semibold text-gray-900">{lead.name}</span>
+              <Link
+                href={`/leads/${encodeURIComponent(lead.place_id)}`}
+                onClick={(e) => e.stopPropagation()}
+                className="font-semibold text-gray-900 hover:text-blue-600 hover:underline"
+              >
+                {lead.name}
+              </Link>
               {!notenPreview && (
                 <span className="text-sm text-gray-400 italic">Keine Notizen</span>
               )}
@@ -216,15 +226,22 @@ function LeadCard({ lead, onReload }: { lead: ConnectLead; onReload: () => void 
                 <span className="text-sm text-gray-500 capitalize">{lead.suchbegriff}</span>
               )}
               {lead.telefon && (
-                <a href={`tel:${lead.telefon}`} className="text-sm text-blue-500 hover:underline">
+                <a
+                  href={`tel:${lead.telefon}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-sm text-blue-500 hover:underline"
+                >
                   {lead.telefon}
                 </a>
               )}
             </div>
           </div>
 
-          {/* Right controls */}
-          <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+          {/* Right controls — stop propagation so they don't toggle feed */}
+          <div
+            className="flex items-center gap-2 shrink-0 flex-wrap justify-end"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Agent dropdown */}
             <select
               className="border border-gray-200 rounded-md px-2 py-1 text-sm text-gray-600 bg-white focus:outline-none"
