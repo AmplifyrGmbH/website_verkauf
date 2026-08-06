@@ -35,6 +35,14 @@ export default function LeadDetailPage() {
         <StatusBadge status={lead.status} />
       </div>
 
+      {/* KI-Analyse */}
+      <Section title="KI-Analyse">
+        <Row label="Empfehlung" value={lead.ki_empfehlung === true ? 'Ja — kontaktieren' : lead.ki_empfehlung === false ? 'Nein' : undefined} highlight={lead.ki_empfehlung === true} />
+        <Row label="Priorität hoch" value={lead.ki_prioritaet_hoch === true ? 'Ja' : lead.ki_prioritaet_hoch === false ? 'Nein' : undefined} />
+        <Row label="Begründung" value={lead.ki_begruendung} />
+        <Row label="Parking-Seite" value={lead.parking_seite === true ? 'Ja' : lead.parking_seite === false ? 'Nein' : undefined} />
+      </Section>
+
       {/* Stammdaten */}
       <Section title="Stammdaten">
         <Row label="Name" value={lead.name} />
@@ -78,14 +86,6 @@ export default function LeadDetailPage() {
           </div>
         </Section>
       )}
-
-      {/* KI-Analyse */}
-      <Section title="KI-Analyse">
-        <Row label="Empfehlung" value={lead.ki_empfehlung === true ? 'Ja — kontaktieren' : lead.ki_empfehlung === false ? 'Nein' : undefined} highlight={lead.ki_empfehlung === true} />
-        <Row label="Priorität hoch" value={lead.ki_prioritaet_hoch === true ? 'Ja' : lead.ki_prioritaet_hoch === false ? 'Nein' : undefined} />
-        <Row label="Begründung" value={lead.ki_begruendung} />
-        <Row label="Parking-Seite" value={lead.parking_seite === true ? 'Ja' : lead.parking_seite === false ? 'Nein' : undefined} />
-      </Section>
 
       {/* Technische Analyse */}
       <Section title="Technische Analyse">
