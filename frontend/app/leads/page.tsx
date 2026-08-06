@@ -5,23 +5,12 @@ import Link from 'next/link'
 import { getLeads, type Lead } from '@/lib/api'
 
 const STATUS_OPTIONS = ['', 'entdeckt', 'analysiert', 'fehler']
-const CONNECT_STATUS_OPTIONS = [
-  { value: '', label: 'Alle Calling-Stati' },
-  { value: 'nicht_angerufen', label: 'Nicht angerufen' },
-  { value: 'nicht_erreicht', label: 'Nicht erreicht' },
-  { value: 'callback', label: 'Callback' },
-  { value: 'demo_gewuenscht', label: 'Demo gewünscht' },
-  { value: 'kein_interesse', label: 'Kein Interesse' },
-  { value: 'website_zu_gut', label: 'Website zu gut' },
-]
-
 export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
-  const [connectStatus, setConnectStatus] = useState('')
   const [kiOnly, setKiOnly] = useState(false)
   const [page, setPage] = useState(0)
   const PAGE_SIZE = 50
@@ -32,7 +21,6 @@ export default function LeadsPage() {
       const r = await getLeads({
         search: search || undefined,
         status: status || undefined,
-        connect_status: connectStatus || undefined,
         ki_empfehlung: kiOnly ? true : undefined,
         limit: PAGE_SIZE,
         offset: page * PAGE_SIZE,
@@ -44,7 +32,7 @@ export default function LeadsPage() {
     } finally {
       setLoading(false)
     }
-  }, [search, status, connectStatus, kiOnly, page])
+  }, [search, status, kiOnly, page])
 
   useEffect(() => {
     load()
@@ -77,15 +65,6 @@ export default function LeadsPage() {
         >
           {STATUS_OPTIONS.map((s) => (
             <option key={s} value={s}>{s || 'Alle Status'}</option>
-          ))}
-        </select>
-        <select
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none"
-          value={connectStatus}
-          onChange={(e) => { setConnectStatus(e.target.value); setPage(0) }}
-        >
-          {CONNECT_STATUS_OPTIONS.map((s) => (
-            <option key={s.value} value={s.value}>{s.label}</option>
           ))}
         </select>
         <label className="flex items-center gap-2 text-sm cursor-pointer">

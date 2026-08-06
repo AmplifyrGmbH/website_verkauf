@@ -30,6 +30,7 @@ export default function ConnectPage() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<Tab>('alle')
   const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
 
   const load = useCallback(async () => {
     try {
@@ -44,10 +45,11 @@ export default function ConnectPage() {
 
   useEffect(() => { load() }, [load])
 
-  // Filter leads based on active tab + search
+  // Filter leads based on active tab + search + status
   const filtered = allLeads.filter((l) => {
     if (activeTab === 'nicht_angerufen' && l.connect_status !== 'nicht_angerufen') return false
     if (PERSONEN.includes(activeTab) && l.connect_zugewiesen !== activeTab) return false
+    if (statusFilter && l.connect_status !== statusFilter) return false
     if (search) {
       const digits = search.replace(/[\s\-\+\(\)]/g, '')
       const tel = (l.telefon || '').replace(/[\s\-\+\(\)]/g, '')
@@ -93,13 +95,25 @@ export default function ConnectPage() {
         })}
       </div>
 
-      {/* Search */}
-      <input
-        className="w-72 border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
-        placeholder="Telefonnummer suchen..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      {/* Search + Status Filter */}
+      <div className="flex gap-3 flex-wrap">
+        <input
+          className="w-64 border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
+          placeholder="Telefonnummer suchen..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <select
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">Alle Stati</option>
+          {STATUS_OPTIONS.map(s => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+      </div>
 
       {/* Cards */}
       {loading ? (
