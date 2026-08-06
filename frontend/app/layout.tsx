@@ -8,10 +8,9 @@ export const metadata: Metadata = {
 }
 
 const NAV = [
-  { href: '/', label: 'Dashboard' },
+  { href: '/pipeline', label: 'Pipeline' },
   { href: '/leads', label: 'Leads' },
   { href: '/connect', label: 'Cold Calling' },
-  { href: '/pipeline', label: 'Pipeline' },
 ]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -20,7 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div className="min-h-screen flex flex-col">
           <nav className="bg-gray-900 text-white px-6 py-3 flex items-center gap-6">
-            <span className="font-bold text-lg tracking-tight">Leads Agent</span>
+            <Link href="/" className="font-bold text-lg tracking-tight hover:text-gray-300 transition-colors">
+              Leads Agent
+            </Link>
             <div className="flex gap-4 ml-4">
               {NAV.map((n) => (
                 <Link
