@@ -204,30 +204,19 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
       {/* Card header — click anywhere except name/controls to toggle feed */}
       <div className="px-4 py-3 cursor-pointer select-none" onClick={onToggle}>
         <div className="flex items-start gap-2">
-          {/* Name + subtitle */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
+          {/* Name + Telefon */}
+          <div className="min-w-0 shrink-0">
+            <div className="flex items-center gap-3">
               <Link
                 href={`/leads/${encodeURIComponent(lead.place_id)}?from=connect`}
                 onClick={(e) => e.stopPropagation()}
-                className="font-semibold text-gray-900 hover:text-blue-600 hover:underline"
+                className="font-semibold text-gray-900 hover:text-blue-600 hover:underline whitespace-nowrap"
               >
                 {lead.name}
               </Link>
-              {!notenPreview && (
-                <span className="text-sm text-gray-400 italic">Keine Notizen</span>
-              )}
-              {notenPreview && (
-                <span className="text-sm text-gray-500 truncate max-w-xs">{notenPreview}</span>
-              )}
-            </div>
-            <div className="flex items-center gap-2 mt-0.5">
-              {lead.suchbegriff && (
-                <span className="text-sm text-gray-500 capitalize">{lead.suchbegriff}</span>
-              )}
               {lead.telefon && (
                 <span className="flex items-center gap-1">
-                  <span className="text-sm text-gray-600">{lead.telefon}</span>
+                  <span className="text-sm text-gray-500 whitespace-nowrap">{lead.telefon}</span>
                   <button
                     onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(lead.telefon!) }}
                     className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -241,6 +230,15 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
                 </span>
               )}
             </div>
+          </div>
+
+          {/* Notiz preview — Mitte */}
+          <div className="flex-1 min-w-0 px-4">
+            {notenPreview ? (
+              <span className="text-sm text-gray-500 truncate block">{notenPreview}</span>
+            ) : (
+              <span className="text-sm text-gray-400 italic">Keine Notizen</span>
+            )}
           </div>
 
           {/* Right controls — stop propagation so they don't toggle feed */}
