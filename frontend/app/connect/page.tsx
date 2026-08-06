@@ -203,47 +203,45 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
       {/* Card header — click anywhere except name/controls to toggle feed */}
       <div className="px-4 py-3 cursor-pointer select-none" onClick={onToggle}>
-        <div className="flex items-start gap-2">
-          {/* Name + Telefon */}
-          <div className="min-w-0 shrink-0">
-            <div className="flex items-center gap-3">
-              <Link
-                href={`/leads/${encodeURIComponent(lead.place_id)}?from=connect`}
-                onClick={(e) => e.stopPropagation()}
-                className="font-semibold text-gray-900 hover:text-blue-600 hover:underline whitespace-nowrap"
-              >
-                {lead.name}
-              </Link>
-              {lead.telefon && (
-                <span className="flex items-center gap-1">
-                  <span className="text-sm text-gray-500 whitespace-nowrap">{lead.telefon}</span>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(lead.telefon!) }}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                    title="Nummer kopieren"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-                    </svg>
-                  </button>
-                </span>
-              )}
-            </div>
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+          {/* Name + Telefon — links */}
+          <div className="flex items-center gap-3 min-w-0">
+            <Link
+              href={`/leads/${encodeURIComponent(lead.place_id)}?from=connect`}
+              onClick={(e) => e.stopPropagation()}
+              className="font-semibold text-gray-900 hover:text-blue-600 hover:underline whitespace-nowrap"
+            >
+              {lead.name}
+            </Link>
+            {lead.telefon && (
+              <span className="flex items-center gap-1">
+                <span className="text-sm text-gray-500 whitespace-nowrap">{lead.telefon}</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(lead.telefon!) }}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  title="Nummer kopieren"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                  </svg>
+                </button>
+              </span>
+            )}
           </div>
 
-          {/* Notiz preview — Mitte */}
-          <div className="flex-1 min-w-0 px-4">
+          {/* Notiz — exakt zentriert */}
+          <div className="text-center">
             {notenPreview ? (
-              <span className="text-sm text-gray-500 truncate block">{notenPreview}</span>
+              <span className="text-sm text-gray-500">{notenPreview}</span>
             ) : (
               <span className="text-sm text-gray-400 italic">Keine Notizen</span>
             )}
           </div>
 
-          {/* Right controls — stop propagation so they don't toggle feed */}
+          {/* Controls — rechts */}
           <div
-            className="flex items-center gap-2 shrink-0 flex-wrap justify-end"
+            className="flex items-center gap-2 justify-end"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Agent dropdown */}
@@ -270,7 +268,7 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
               ))}
             </select>
 
-          </div>
+            </div>
         </div>
       </div>
 
