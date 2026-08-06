@@ -41,7 +41,7 @@ export default function LeadDetailPage() {
         <Row label="Anzeigename" value={lead.name_anzeige} />
         <Row label="Adresse" value={lead.adresse} />
         <Row label="Ort" value={lead.ort} />
-        <Row label="Telefon" value={lead.telefon} link={lead.telefon ? `https://teams.microsoft.com/l/call/0/0?users=tel:${lead.telefon.replace(/[\s\-\(\)]/g, '').replace('+', '%2B')}` : undefined} />
+        <Row label="Telefon" value={lead.telefon} copyable />
         <Row label="E-Mail" value={lead.email} link={lead.email ? `mailto:${lead.email}` : undefined} />
         <Row label="Website" value={lead.website_url} link={lead.website_url} />
         <Row label="Domain" value={lead.website_domain} />
@@ -125,18 +125,32 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function Row({ label, value, link, highlight }: { label: string; value?: string | null; link?: string; highlight?: boolean }) {
+function Row({ label, value, link, highlight, copyable }: { label: string; value?: string | null; link?: string; highlight?: boolean; copyable?: boolean }) {
   if (value == null || value === '') return null
   return (
     <div className="flex py-2 text-sm gap-4">
       <span className="text-gray-400 w-44 shrink-0">{label}</span>
-      {link ? (
-        <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">
-          {value}
-        </a>
-      ) : (
-        <span className={highlight ? 'text-green-600 font-medium' : 'text-gray-800'}>{value}</span>
-      )}
+      <span className="flex items-center gap-1">
+        {link ? (
+          <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">
+            {value}
+          </a>
+        ) : (
+          <span className={highlight ? 'text-green-600 font-medium' : 'text-gray-800'}>{value}</span>
+        )}
+        {copyable && (
+          <button
+            onClick={() => navigator.clipboard.writeText(value!)}
+            className="text-gray-400 hover:text-gray-600 transition-colors ml-1"
+            title="Kopieren"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+          </button>
+        )}
+      </span>
     </div>
   )
 }

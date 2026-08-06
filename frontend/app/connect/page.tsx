@@ -226,15 +226,19 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
                 <span className="text-sm text-gray-500 capitalize">{lead.suchbegriff}</span>
               )}
               {lead.telefon && (
-                <a
-                  href={`https://teams.microsoft.com/l/call/0/0?users=tel:${lead.telefon.replace(/[\s\-\(\)]/g, '').replace('+', '%2B')}`}
-                  onClick={(e) => e.stopPropagation()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-500 hover:underline"
-                >
-                  {lead.telefon}
-                </a>
+                <span className="flex items-center gap-1">
+                  <span className="text-sm text-gray-600">{lead.telefon}</span>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(lead.telefon!) }}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    title="Nummer kopieren"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                    </svg>
+                  </button>
+                </span>
               )}
             </div>
           </div>
