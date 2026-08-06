@@ -23,14 +23,13 @@ const STATUS_OPTIONS = [
 
 const TERMINAL = new Set(['kein_interesse', 'website_zu_gut'])
 
-type Tab = 'alle' | 'nicht_angerufen' | string // string = person name
 
 export default function ConnectPage() {
   const [allLeads, setAllLeads] = useState<ConnectLead[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<Tab>('alle')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [personFilter, setPersonFilter] = useState('')
 
   const load = useCallback(async () => {
     try {
@@ -45,11 +44,10 @@ export default function ConnectPage() {
 
   useEffect(() => { load() }, [load])
 
-  // Filter leads based on active tab + search + status
+  // Filter leads based on search + status + person
   const filtered = allLeads.filter((l) => {
-    if (activeTab === 'nicht_angerufen' && l.connect_status !== 'nicht_angerufen') return false
-    if (PERSONEN.includes(activeTab) && l.connect_zugewiesen !== activeTab) return false
     if (statusFilter && l.connect_status !== statusFilter) return false
+    if (personFilter && l.connect_zugewiesen !== personFilter) return false
     if (search) {
       const digits = search.replace(/[\s\-\+\(\)]/g, '')
       const tel = (l.telefon || '').replace(/[\s\-\+\(\)]/g, '')
@@ -58,48 +56,15 @@ export default function ConnectPage() {
     return true
   })
 
-  const countFor = (tab: Tab) => {
-    if (tab === 'alle') return allLeads.length
-    if (tab === 'nicht_angerufen') return allLeads.filter(l => l.connect_status === 'nicht_angerufen').length
-    return allLeads.filter(l => l.connect_zugewiesen === tab).length
-  }
-
-  const tabs: { key: Tab; label: string }[] = [
-    { key: 'alle', label: 'Alle' },
-    { key: 'nicht_angerufen', label: 'Nicht angerufen' },
-    ...PERSONEN.map(p => ({ key: p as Tab, label: p.charAt(0).toUpperCase() + p.slice(1) })),
-  ]
-
   return (
     <div className="max-w-4xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Cold Calling</h1>
 
-      {/* Tabs */}
-      <div className="flex gap-2 flex-wrap">
-        {tabs.map((t) => {
-          const count = countFor(t.key)
-          const active = activeTab === t.key
-          return (
-            <button
-              key={t.key}
-              onClick={() => setActiveTab(t.key)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                active
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {t.label} <span className={active ? 'text-gray-300' : 'text-gray-400'}>{count}</span>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* Search + Status Filter */}
+      {/* Filters */}
       <div className="flex gap-3 flex-wrap">
         <input
           className="w-64 border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
-          placeholder="Telefonnummer suchen..."
+          placeholder="Name oder Telefonnummer..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -111,6 +76,16 @@ export default function ConnectPage() {
           <option value="">Alle Stati</option>
           {STATUS_OPTIONS.map(s => (
             <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+        <select
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
+          value={personFilter}
+          onChange={(e) => setPersonFilter(e.target.value)}
+        >
+          <option value="">Alle Personen</option>
+          {PERSONEN.map(p => (
+            <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
           ))}
         </select>
       </div>
