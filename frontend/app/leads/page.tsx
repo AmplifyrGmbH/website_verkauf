@@ -11,7 +11,6 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
-  const [kiOnly, setKiOnly] = useState(false)
   const [page, setPage] = useState(0)
   const PAGE_SIZE = 50
 
@@ -21,7 +20,7 @@ export default function LeadsPage() {
       const r = await getLeads({
         search: search || undefined,
         status: status || undefined,
-        ki_empfehlung: kiOnly ? true : undefined,
+
         limit: PAGE_SIZE,
         offset: page * PAGE_SIZE,
       })
@@ -32,7 +31,7 @@ export default function LeadsPage() {
     } finally {
       setLoading(false)
     }
-  }, [search, status, kiOnly, page])
+  }, [search, status, page])
 
   useEffect(() => {
     load()
@@ -67,15 +66,7 @@ export default function LeadsPage() {
             <option key={s} value={s}>{s || 'Alle Status'}</option>
           ))}
         </select>
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input
-            type="checkbox"
-            checked={kiOnly}
-            onChange={(e) => { setKiOnly(e.target.checked); setPage(0) }}
-            className="rounded"
-          />
-          Nur KI-Empfehlung
-        </label>
+
       </form>
 
       {loading ? (
