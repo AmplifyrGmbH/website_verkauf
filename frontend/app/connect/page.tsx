@@ -28,9 +28,9 @@ const TERMINAL = new Set(['kein_interesse', 'website_zu_gut'])
 export default function ConnectPage() {
   const [allLeads, setAllLeads] = useState<ConnectLead[]>([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
-  const [personFilter, setPersonFilter] = useState('')
+  const [search, setSearch] = useState(() => sessionStorage.getItem('cc_search') ?? '')
+  const [statusFilter, setStatusFilter] = useState(() => sessionStorage.getItem('cc_status') ?? '')
+  const [personFilter, setPersonFilter] = useState(() => sessionStorage.getItem('cc_person') ?? '')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const load = useCallback(async () => {
@@ -68,12 +68,12 @@ export default function ConnectPage() {
           className="w-64 border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
           placeholder="Name oder Telefonnummer..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => { setSearch(e.target.value); sessionStorage.setItem('cc_search', e.target.value) }}
         />
         <select
           className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e) => { setStatusFilter(e.target.value); sessionStorage.setItem('cc_status', e.target.value) }}
         >
           <option value="">Alle Stati</option>
           {STATUS_OPTIONS.map(s => (
@@ -83,7 +83,7 @@ export default function ConnectPage() {
         <select
           className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
           value={personFilter}
-          onChange={(e) => setPersonFilter(e.target.value)}
+          onChange={(e) => { setPersonFilter(e.target.value); sessionStorage.setItem('cc_person', e.target.value) }}
         >
           <option value="">Alle Personen</option>
           {PERSONEN.map(p => (
