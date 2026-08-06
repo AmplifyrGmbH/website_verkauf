@@ -28,9 +28,9 @@ const TERMINAL = new Set(['kein_interesse', 'website_zu_gut'])
 export default function ConnectPage() {
   const [allLeads, setAllLeads] = useState<ConnectLead[]>([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState(() => sessionStorage.getItem('cc_search') ?? '')
-  const [statusFilter, setStatusFilter] = useState(() => sessionStorage.getItem('cc_status') ?? '')
-  const [personFilter, setPersonFilter] = useState(() => sessionStorage.getItem('cc_person') ?? '')
+  const [search, setSearch] = useState(() => typeof window !== 'undefined' ? (sessionStorage.getItem('cc_search') ?? '') : '')
+  const [statusFilter, setStatusFilter] = useState(() => typeof window !== 'undefined' ? (sessionStorage.getItem('cc_status') ?? '') : '')
+  const [personFilter, setPersonFilter] = useState(() => typeof window !== 'undefined' ? (sessionStorage.getItem('cc_person') ?? '') : '')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const load = useCallback(async () => {
