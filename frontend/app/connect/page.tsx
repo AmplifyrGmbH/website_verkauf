@@ -208,7 +208,7 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <Link
-                href={`/leads/${encodeURIComponent(lead.place_id)}`}
+                href={`/leads/${encodeURIComponent(lead.place_id)}?from=connect`}
                 onClick={(e) => e.stopPropagation()}
                 className="font-semibold text-gray-900 hover:text-blue-600 hover:underline"
               >

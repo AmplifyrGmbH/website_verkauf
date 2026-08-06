@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { type Lead } from '@/lib/api'
 
@@ -9,6 +9,10 @@ const BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8004'
 
 export default function LeadDetailPage() {
   const { place_id } = useParams<{ place_id: string }>()
+  const searchParams = useSearchParams()
+  const from = searchParams.get('from')
+  const backHref = from === 'connect' ? '/connect' : '/leads'
+  const backLabel = from === 'connect' ? '← Cold Calling' : '← Leads'
   const [lead, setLead] = useState<Lead | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -26,7 +30,7 @@ export default function LeadDetailPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <Link href="/leads" className="text-sm text-gray-400 hover:text-gray-600">← Leads</Link>
+        <Link href={backHref} className="text-sm text-gray-400 hover:text-gray-600">{backLabel}</Link>
         <h1 className="text-2xl font-bold">{lead.name_anzeige || lead.name}</h1>
         <StatusBadge status={lead.status} />
       </div>
