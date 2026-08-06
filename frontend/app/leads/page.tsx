@@ -117,9 +117,7 @@ export default function LeadsPage() {
                   </td>
                   <td className="px-4 py-3">
                     {l.ki_empfehlung === true && (
-                      <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium">
-                        {l.ki_prioritaet_hoch ? 'Hoch' : 'Ja'}
-                      </span>
+                      <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium">Ja</span>
                     )}
                     {l.ki_empfehlung === false && (
                       <span className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full text-xs">Nein</span>
