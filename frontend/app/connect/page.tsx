@@ -227,7 +227,7 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
               )}
               {lead.telefon && (
                 <a
-                  href={`https://teams.microsoft.com/l/call/0/0?users=tel:${encodeURIComponent(lead.telefon)}`}
+                  href={`https://teams.microsoft.com/l/call/0/0?users=tel:${lead.telefon.replace(/[\s\-\(\)]/g, '').replace('+', '%2B')}`}
                   onClick={(e) => e.stopPropagation()}
                   target="_blank"
                   rel="noopener noreferrer"
