@@ -90,7 +90,6 @@ export default function Dashboard() {
           <Stat label="KI-Empfohlen" value={kiEmpfohlen} color="blue" />
           <Stat label="Im Calling" value={inCalling} />
           <Stat label="Demos verschickt" value={demos} color="blue" />
-          <Stat label="Verkauft" value={verkauft} color="green" />
         </div>
 
         {/* Status breakdown */}
