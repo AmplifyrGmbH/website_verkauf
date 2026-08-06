@@ -96,7 +96,7 @@ export default function LeadsPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-gray-500">{l.ort || '—'}</td>
-                  <td className="px-4 py-3 text-gray-500">{l.telefon || '—'}</td>
+                  <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{l.telefon || '—'}</td>
                   <td className="px-4 py-3">
                     {l.website_url ? (
                       <a
