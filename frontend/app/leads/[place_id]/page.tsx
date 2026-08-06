@@ -28,7 +28,7 @@ export default function LeadDetailPage() {
   if (!lead) return <div className="text-gray-400 p-8">Lead nicht gefunden.</div>
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Link href={backHref} className="text-sm text-gray-400 hover:text-gray-600">{backLabel}</Link>
         <h1 className="text-2xl font-bold">{lead.name_anzeige || lead.name}</h1>

@@ -59,7 +59,7 @@ export default function ConnectPage() {
   })
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4">
+    <div className="space-y-4">
       <h1 className="text-2xl font-bold">Cold Calling</h1>
 
       {/* Filters */}

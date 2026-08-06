@@ -58,7 +58,7 @@ export default function PipelinePage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="space-y-8">
       <h1 className="text-2xl font-bold">Pipeline</h1>
 
       {msg && (

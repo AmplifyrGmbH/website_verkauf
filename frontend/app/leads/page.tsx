@@ -44,7 +44,7 @@ export default function LeadsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-4">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Leads</h1>
         <span className="text-sm text-gray-500">{total} total</span>

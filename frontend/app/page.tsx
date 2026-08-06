@@ -69,7 +69,7 @@ export default function Dashboard() {
   if (loading) return <div className="text-gray-400 p-8">Lade...</div>
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="space-y-8">
       <h1 className="text-2xl font-bold">Dashboard</h1>
 
       {/* Pipeline */}
