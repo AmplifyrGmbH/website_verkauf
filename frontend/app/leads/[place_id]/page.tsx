@@ -41,7 +41,7 @@ export default function LeadDetailPage() {
         <Row label="Anzeigename" value={lead.name_anzeige} />
         <Row label="Adresse" value={lead.adresse} />
         <Row label="Ort" value={lead.ort} />
-        <Row label="Telefon" value={lead.telefon} link={lead.telefon ? `tel:${lead.telefon}` : undefined} />
+        <Row label="Telefon" value={lead.telefon} link={lead.telefon ? `https://teams.microsoft.com/l/call/0/0?users=tel:${encodeURIComponent(lead.telefon)}` : undefined} />
         <Row label="E-Mail" value={lead.email} link={lead.email ? `mailto:${lead.email}` : undefined} />
         <Row label="Website" value={lead.website_url} link={lead.website_url} />
         <Row label="Domain" value={lead.website_domain} />
