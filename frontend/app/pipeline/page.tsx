@@ -32,7 +32,7 @@ export default function PipelinePage() {
     setMsg('')
     try {
       const r1 = await startDiscovery(suchbegriff.trim(), limit === '' ? 100 : limit)
-      setMsg(`Discovery gestartet (Job #${r1.job_id}) — Analyse startet danach automatisch`)
+      setMsg(`Suche gestartet (Job #${r1.job_id})…`)
       setSuchbegriff('')
       loadJobs()
       // Poll until discovery job is done, then start analyse
@@ -43,7 +43,7 @@ export default function PipelinePage() {
           const dJob = jobs.find((j) => j.id === r1.job_id)
           if (dJob?.status === 'abgeschlossen' || dJob?.status === 'fehler') {
             const r2 = await startAnalyse()
-            setMsg(`Discovery abgeschlossen — Analyse gestartet (Job #${r2.job_id})`)
+            setMsg(`Leads gefunden — Analyse läuft (Job #${r2.job_id})`)
             loadJobs()
             return
           }
@@ -68,10 +68,7 @@ export default function PipelinePage() {
       )}
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-        <h2 className="font-semibold text-lg">Discovery + Analyse starten</h2>
-        <p className="text-sm text-gray-500">
-          Discovery läuft zuerst, Analyse startet automatisch danach.
-        </p>
+        <h2 className="font-semibold text-lg">Leads suchen</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
