@@ -74,14 +74,27 @@ export default function PipelinePage() {
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Suchbegriff</label>
-            <input
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="z.B. Zahnarzt Zürich"
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Suchbegriffe
+              <span className="ml-2 text-xs text-gray-400 font-normal">kommagetrennt — pro Begriff werden {limit || 100} Leads geholt</span>
+            </label>
+            <textarea
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              rows={3}
+              placeholder="z.B. Zahnarzt Zürich, Restaurant Bern, Fitnessstudio Basel"
               value={suchbegriff}
               onChange={(e) => setSuchbegriff(e.target.value)}
               required
             />
+            {suchbegriff.trim() && (
+              <div className="mt-1 flex flex-wrap gap-1">
+                {suchbegriff.split(',').map(s => s.trim()).filter(Boolean).map((s, i) => (
+                  <span key={i} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Limit</label>

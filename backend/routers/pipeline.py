@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/v1/pipeline", tags=["pipeline"])
 
 
 class DiscoveryRequest(BaseModel):
-    suchbegriff: str
+    suchbegriff: str  # kommagetrennt
     limit: int = 100
 
 
@@ -31,7 +31,8 @@ async def start_discovery(req: DiscoveryRequest, db: AsyncSession = Depends(get_
     await db.commit()
     await db.refresh(job)
 
-    asyncio.create_task(run_discovery(job.id, req.suchbegriff, req.limit))
+    suchbegriffe = [s.strip() for s in req.suchbegriff.split(",") if s.strip()]
+    asyncio.create_task(run_discovery(job.id, suchbegriffe, req.limit))
 
     return {"job_id": job.id, "status": "gestartet"}
 
