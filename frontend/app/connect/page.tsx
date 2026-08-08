@@ -5,7 +5,6 @@ import Link from 'next/link'
 import {
   getConnectLeads,
   setStatus,
-  setDemoVerschickt,
   addNotiz,
   getNotizen,
   type ConnectLead,
@@ -162,13 +161,6 @@ function LeadCard({ lead, onReload, expanded, onToggle }: {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ person: agent }),
       })
-      onReload()
-    } catch (e) { console.error(e) }
-  }
-
-  async function handleDemoVerschickt() {
-    try {
-      await setDemoVerschickt(lead.place_id)
       onReload()
     } catch (e) { console.error(e) }
   }

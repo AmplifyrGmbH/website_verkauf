@@ -63,7 +63,6 @@ export default function Dashboard() {
     return acc
   }, {} as Record<string, number>)
 
-  const verkauft = statusCounts['verkauft'] ?? 0
   const inCalling = connectLeads.length
 
   if (loading) return <div className="text-gray-400 p-8">Lade...</div>
