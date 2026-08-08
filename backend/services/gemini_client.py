@@ -29,16 +29,16 @@ SCHRITT 1 — Ist dies eine echte Unternehmens-Website?
 Falls Parking-Seite, "Domain geparkt", Coming-soon, Fehlerseite:
 → parking_seite=true, empfehlung=false, begruendung="Keine echte Website."
 
-SCHRITT 2 — Hat dieses Unternehmen wirklich eine schlechte Website?
+SCHRITT 2 — Hat dieses Unternehmen eine verbesserungswürdige Website?
 Berücksichtige: visuelles Design, Mobile-Darstellung, technischer Zustand.
-NUR empfehlung=true wenn MINDESTENS EINES dieser Kriterien EINDEUTIG zutrifft:
-- Design erkennbar aus den 2000er/frühen 2010er Jahren
-- Kein responsives Design (Mobile sieht aus wie zusammengequetschter Desktop)
-- Kein professionelles Bildmaterial, fast nur Text
-- Erkennbar veralteter Baukasten
+empfehlung=false NUR wenn die Website KLAR modern und professionell ist:
+- Zeitgemässes Design (2018 oder neuer)
+- Einwandfreies responsives Mobile-Layout
+- Professionelles Bildmaterial
+- Klare Struktur und Call-to-Action
 
-Im Zweifel: empfehlung=false.
-prioritaet_hoch=true wenn mehrere Kriterien gleichzeitig zutreffen.
+Ansonsten: empfehlung=true. Im Zweifel: empfehlung=true.
+prioritaet_hoch=true wenn das Design erkennbar veraltet ist oder mehrere Mängel gleichzeitig vorliegen.
 
 Antworte NUR mit JSON:
 {{
