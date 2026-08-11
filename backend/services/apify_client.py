@@ -10,6 +10,7 @@ def run_google_maps(suchbegriff: str, limit: int) -> list[dict]:
             "maxCrawledPlacesPerSearch": limit,
             "language": "de",
             "countryCode": "ch",
+            "maxAutomaticZoomOut": 0,
         }
     )
     return list(client.dataset(run.default_dataset_id).iterate_items())
