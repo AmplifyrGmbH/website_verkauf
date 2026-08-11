@@ -29,10 +29,12 @@ export default function PipelinePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!begriff.trim()) return
+    const begriffListe = begriff.split(',').map(b => b.trim()).filter(Boolean)
     const ortListe = orte.split(',').map(o => o.trim()).filter(Boolean)
-    const suchbegriffe = ortListe.length > 0
-      ? ortListe.map(o => `${begriff.trim()} ${o}`).join(', ')
-      : begriff.trim()
+    const kombinationen = begriffListe.flatMap(b =>
+      ortListe.length > 0 ? ortListe.map(o => `${b} ${o}`) : [b]
+    )
+    const suchbegriffe = kombinationen.join(', ')
     setLoading(true)
     setMsg('')
     try {
@@ -78,11 +80,11 @@ export default function PipelinePage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Begriff</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Begriffe (kommagetrennt)</label>
               <input
                 type="text"
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="z.B. Zahnarzt"
+                placeholder="z.B. Zahnarzt, Physiotherapeut"
                 value={begriff}
                 onChange={(e) => setBegriff(e.target.value)}
                 required
@@ -101,9 +103,10 @@ export default function PipelinePage() {
           </div>
           {begriff.trim() && (
             <div className="flex flex-wrap gap-1">
-              {(orte.split(',').map(o => o.trim()).filter(Boolean).length > 0
-                ? orte.split(',').map(o => o.trim()).filter(Boolean).map(o => `${begriff.trim()} ${o}`)
-                : [begriff.trim()]
+              {begriff.split(',').map(b => b.trim()).filter(Boolean).flatMap(b =>
+                orte.split(',').map(o => o.trim()).filter(Boolean).length > 0
+                  ? orte.split(',').map(o => o.trim()).filter(Boolean).map(o => `${b} ${o}`)
+                  : [b]
               ).map((s, i) => (
                 <span key={i} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">
                   {s}
